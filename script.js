@@ -11,6 +11,7 @@ var stayButton = document.getElementById('stay');
 var getPlayerTotal = document.getElementById('playerTotal');
 var getCompTotal = document.getElementById('compTotal');
 var staySwitch = 0;
+var aces;
 
 var playerCardDivs = document.querySelectorAll('.playerCards');
 var compCardDivs = document.querySelectorAll('.compCards')
@@ -25,7 +26,7 @@ newGameButton.addEventListener('click', () => {
 hitButton.addEventListener('click', () => {
 	playerHit();
 	playerTotal();
-})
+});
 
 stayButton.addEventListener('click', () => {
 	staySwitch += 1;
@@ -68,6 +69,88 @@ function createDeck() {
 	}
 }
 
+var dia = function swapDiamondAces() {
+	var highAce = new card(11, 11, "Diamonds");	
+	playerHandArr[aceIndex] = highAce;
+	playerTotal();
+	displayTotals();
+	displayCards();
+}
+
+function aceButton() {
+	for(i=0; i < playerCardDivs.length; i++) {
+		if(playerCardDivs[i].textContent === "1 Diamonds") {
+			var aceIndex = 0;
+			aceIndex = i;
+			var suitName = "Diamonds"
+			playerCardDivs[i].parentNode.setAttribute("id", "diamondAce");
+			playerCardDivs[i].parentNode.classList.add("panel-danger");
+			$('#diamondAce').on("click", () =>{
+				var highAce = new card(11, 11, suitName);
+				
+				playerHandArr[aceIndex] = highAce;
+				playerTotal();
+				displayTotals();
+				displayCards();
+			});
+		}
+
+		else if(playerCardDivs[i].textContent === "1 Spades") {
+			var aceIndex = 0;
+			aceIndex = i;
+			var suitName = "Spades";
+			playerCardDivs[i].parentNode.setAttribute("id", "spadeAce");
+			playerCardDivs[i].parentNode.classList.add("panel-danger");
+			$('#spadeAce').on("click", () =>{
+				var highAce = new card(11, 11, suitName);
+				
+				playerHandArr[aceIndex] = highAce;
+				playerTotal();
+				displayTotals();
+				displayCards();
+			});
+		}
+		else if(playerCardDivs[i].textContent === "1 Clubs") {
+			var aceIndex = 0;
+			aceIndex = i;
+			var suitName = "Clubs";
+			playerCardDivs[i].parentNode.setAttribute("id", "clubAce");
+			playerCardDivs[i].parentNode.classList.add("panel-danger");
+			$('#clubAce').on("click", () =>{
+				var highAce = new card(11, 11, suitName);
+				
+				playerHandArr[aceIndex] = highAce;
+				playerTotal();
+				displayTotals();
+				displayCards();
+			});
+		}
+		else if(playerCardDivs[i].textContent === "1 Hearts") {
+			var aceIndex = 0;
+			aceIndex = i;
+			var suitName = "Hearts";
+			playerCardDivs[i].parentNode.setAttribute("id", "heartAce");
+			playerCardDivs[i].parentNode.classList.add("panel-danger");
+			$('#heartAce').on("click", () =>{
+				var highAce = new card(11, 11, suitName);
+				
+				playerHandArr[aceIndex] = highAce;
+				playerTotal();
+				displayTotals();
+				displayCards();
+				$("#heartAce").off("click");
+			});
+		}
+	}
+}
+
+function aceReset() {
+	$(".panel-danger").off("click");
+	for(i=0; i<playerCardDivs.length; i++)
+		playerCardDivs[i].parentNode.classList.remove("panel-danger");
+
+}
+
 function playerTotal() {
 	playerHandTotalArr = 0;
 	for(i=0; i < playerHandArr.length; i++) {
@@ -76,7 +159,9 @@ function playerTotal() {
 }
 
 function newGame() {
+	aceReset();
 	clearCards();
+	
 	playerHandArr.length = 0;
 	compHandArr.length = 0;
 	staySwitch = 0;
@@ -144,18 +229,12 @@ function playerHit() {
 	if (playerHandTotalArr >= 21 || playerHandArr.length == 5) {
 		gameLogic();
 	}
+	aceButton();
 }
 
-function findAces() {
-	for(i = 0; i < playerHandArr.length; i++) {
-		if (playerHandArr[i].value == 1 || playerHandArr[i].value == 11) {
-
-		}
-	} 
-}
 
 function compLogic() {
-	while (compHandTotalArr < 17) {
+	while (compHandTotalArr < 17 && compHandArr.length < 5) {
 		compHit();
 	}
 	compStay();
@@ -199,6 +278,7 @@ function playAnotherGame() {
 function gameLogic() {
 	if (playerHandTotalArr > 21) {
 		window.alert("You Suck");
+		staySwitch += 1;
 		displayCards();
 		displayTotals();
 	}
@@ -246,7 +326,7 @@ function gameLogic() {
 		displayTotals();
 	}
 
-	else if (compHandTotalArr == playerHandTotalArr) {
+	else if (compHandTotalArr === playerHandTotalArr && staySwitch > 0) {
 		window.alert("it's a tie :(");
 		displayCards();
 		displayTotals();
