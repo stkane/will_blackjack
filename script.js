@@ -277,7 +277,7 @@ function playAnotherGame() {
 
 function gameLogic() {
 	if (playerHandTotalArr > 21) {
-		window.alert("You Suck");
+		window.alert("You busted!");
 		staySwitch += 1;
 		displayCards();
 		displayTotals();
